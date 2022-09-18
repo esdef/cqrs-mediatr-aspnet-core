@@ -23,16 +23,22 @@ namespace CqrsMediatrExample
 			services.AddMediatR(typeof(Startup));
 			services.AddSingleton<FakeDataStore>();
 			services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
 
-			services.AddControllers();
-		}
+            services.AddControllers();
+
+			services.AddSwaggerGen();
+        }
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-			}
+                
+				app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
 			app.UseHttpsRedirection();
 
@@ -44,6 +50,6 @@ namespace CqrsMediatrExample
 			{
 				endpoints.MapControllers();
 			});
-		}
+        }
 	}
 }
